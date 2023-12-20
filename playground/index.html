@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,6 +6,10 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module">
+      import { getInfo } from '../packages/core/index.js'
+      console.log('1111')
+      console.log(getInfo())
+    </script>
   </body>
 </html>
