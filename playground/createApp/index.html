@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.3.4/vue.global.prod.js"></script>
+  <body>
+    <div id="app">{{ message }}</div>
+
+    <script type="module">
+      import { createApp } from '/packages/core/index.js'
+      console.log(window)
+      const { ref } = Vue
+
+      createApp({
+        setup() {
+          const message = ref('Hello vue!')
+          setTimeout(() => {
+            message.value = 'Hello Message!'
+          }, 2000)
+          return {
+            message
+          }
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
