@@ -9,8 +9,10 @@
     <div id="app">{{ message }}</div>
 
     <script type="module">
+      import { getInfo } from '/packages/core/index.js'
       console.log(window)
-      const { createApp, ref } = Vue
+      console.log(getInfo())
+      const { ref ,createApp} = Vue
 
       createApp({
         setup() {
