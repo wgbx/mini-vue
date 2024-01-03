@@ -1,0 +1,20 @@
+{
+  "name": "@vue/reactivity",
+  "description": "@vue/reactivity",
+  "main": "index.js",
+  "module": "dist/reactivity.esm-bundler.js",
+  "types": "dist/reactivity.d.ts",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "buildOptions": {
+    "name": "VueReactivity",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "cjs",
+      "global"
+    ]
+  }
+}

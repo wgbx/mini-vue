@@ -1,18 +1,14 @@
 {
+  "private": true,
   "name": "mini-vue",
   "version": "0.0.1",
+  "packageManager": "pnpm@8.14.0",
   "type": "module",
   "description": "vue3基础实现",
   "main": "dist/tool.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "vitepress dev packages",
-    "test": "jest",
-    "build": "rollup --config ./rollup.config.js",
-    "publish": "yarn publish",
-    "docs:dev": "vitepress dev packages",
-    "docs:build": "vitepress build packages",
-    "docs:preview": "vitepress preview packages"
+    "build": "node scripts/build.js"
   },
   "author": "微光北下",
   "license": "MIT",
@@ -32,7 +28,6 @@
     "rollup-plugin-typescript2": "^0.34.1",
     "ts-jest": "^29.1.0",
     "tslib": "^2.5.2",
-    "typescript": "^5.0.4",
-    "vitepress": "1.0.0-rc.24"
+    "typescript": "^5.0.4"
   }
 }
