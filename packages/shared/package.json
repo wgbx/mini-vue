@@ -5,7 +5,7 @@
   "types": "dist/shared.d.ts",
   "buildOptions": {
     "formats": [
-      "esm-bundler",
+      "es",
       "cjs"
     ]
   }
