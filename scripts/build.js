@@ -1,10 +1,12 @@
 import fs from 'fs'
+import { execa } from 'execa'
 
-const dirs = fs.readdirSync('packages').filter(path=>{
-  if(!fs.statSync(`packages/${path}`).isDirectory()){
-    return false
-  }
-  return true
+const dirs = fs.readdirSync('packages').filter(path => fs.statSync(`packages/${path}`).isDirectory())
+
+async function build(target) {
+  await execa('rollup', ['-c', '--environment', `TARGET:${target}`])
+}
+
+Promise.all(dirs.map(build)).then(() => {
+  console.log('build finished')
 })
-
-console.log("🚀 ~ file: build.js:8 ~ dirs ~ dirs:", dirs)
