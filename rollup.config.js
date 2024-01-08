@@ -1,8 +1,7 @@
 import NodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import babel from '@rollup/plugin-babel'
-import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
+import json from '@rollup/plugin-json'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
@@ -32,6 +31,15 @@ const outputOptions = {
   }
 }
 
-function createConfig() {}
+function createConfig(format, output) {
+  output.name = buildOptions.name
+  output.sourcemap = true
+
+  return {
+    input: resolve(`src/index.ts`),
+    output,
+    plugins: [json(), typescript(), NodeResolve(), commonjs()]
+  }
+}
 
 export default buildOptions.formats.map(format => createConfig(format, outputOptions[format]))

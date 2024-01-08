@@ -8,6 +8,7 @@
   "main": "dist/tool.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "dev": "node scripts/dev.js",
     "build": "node scripts/build.js"
   },
   "author": "微光北下",
