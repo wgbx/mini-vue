@@ -1,1 +1,3 @@
-export const shared = 10
+export function isObject(target) {
+  return typeof target === 'object' && target !== null
+}
