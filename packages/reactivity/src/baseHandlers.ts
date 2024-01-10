@@ -1,5 +1,6 @@
 import { isObject } from '@vue/shared'
 import { reactive, readonly } from './reactive'
+import { warn } from './warning'
 
 const get = createGetter()
 const shallowGet = createGetter(false, true)
@@ -13,6 +14,7 @@ function createGetter(isReadonly = false, shallow = false) {
   return function get(target, key, receiver) {
     const res = Reflect.get(target, key, receiver)
     if (!isReadonly) {
+      return res
     }
     if (shallow) {
       return res
@@ -26,8 +28,7 @@ function createGetter(isReadonly = false, shallow = false) {
 
 function createSetter(shallow = false) {
   return function set(target, key, value, receiver) {
-    const res = Reflect.set(target, key, value, receiver)
-    return res
+    return Reflect.set(target, key, value, receiver)
   }
 }
 
@@ -42,12 +43,12 @@ export const shallowReactiveHandlers = {
 export const readonlyHandlers = {
   get: readonlyGet,
   set: (target, key) => {
-    console.warn(`Delete operation on key "${String(key)}" failed: target is readonly.`, target)
+    warn(`Delete operation on key "${String(key)}" failed: target is readonly.`, target)
   }
 }
 export const shallowReadonlyHandlers = {
   get: shallowReadonlyGet,
   set: (target, key) => {
-    console.warn(`Delete operation on key "${String(key)}" failed: target is readonly.`, target)
+    warn(`Delete operation on key "${String(key)}" failed: target is readonly.`, target)
   }
 }

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+  </body>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.3.4/vue.global.prod.js"></script>
+  <script src="../../reactivity/dist/reactivity.global.js"></script>
+  <script>
+    const { reactive, effect } = Vue
+    const state = reactive({ name: '张三', age: 20 })
+    effect(() => {
+      app.innerHTML = state.name + '-' + state.age
+    })
+  </script>
+</html>
