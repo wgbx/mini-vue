@@ -1,6 +1,8 @@
 import { isObject } from '@vue/shared'
 import { reactive, readonly } from './reactive'
 import { warn } from './warning'
+import { TrackOpTypes } from './constants'
+import { Track } from './effect'
 
 const get = createGetter()
 const shallowGet = createGetter(false, true)
@@ -14,7 +16,7 @@ function createGetter(isReadonly = false, shallow = false) {
   return function get(target, key, receiver) {
     const res = Reflect.get(target, key, receiver)
     if (!isReadonly) {
-      return res
+      Track(target, TrackOpTypes.GET, key)
     }
     if (shallow) {
       return res

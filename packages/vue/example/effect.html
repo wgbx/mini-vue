@@ -13,10 +13,14 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.3.4/vue.global.prod.js"></script>
   <script src="../../reactivity/dist/reactivity.global.js"></script>
   <script>
-    const { reactive, effect } = Vue
-    const state = reactive({ name: '张三', age: 20 })
+    const { reactive, effect } = VueReactivity
+    const state = reactive({ name: '张三', age: 20, sex: 0 })
     effect(() => {
-      app.innerHTML = state.name + '-' + state.age
+      app.innerHTML = state.name + '-'
+      effect(() => {
+        state.age
+      })
+      state.sex
     })
   </script>
 </html>
