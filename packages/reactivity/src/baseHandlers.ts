@@ -38,16 +38,19 @@ export const reactiveHandlers = {
   get,
   set
 }
+
 export const shallowReactiveHandlers = {
   get: shallowGet,
   set: shallowSet
 }
+
 export const readonlyHandlers = {
   get: readonlyGet,
   set: (target, key) => {
     warn(`Delete operation on key "${String(key)}" failed: target is readonly.`, target)
   }
 }
+
 export const shallowReadonlyHandlers = {
   get: shallowReadonlyGet,
   set: (target, key) => {
