@@ -14,8 +14,7 @@
   <script src="../../reactivity/dist/reactivity.global.js"></script>
   <script>
     const { reactive, readonly, shallowReactive, shallowReadonly } = VueReactivity
-    const state = shallowReadonly({ name: 'reactivity', list: { a: 1, b: 2 } })
-    console.log('🚀 ~ state:', state.list)
-    state.name = 'reactivity-new'
+    const state = reactive({ name: '张三', age: '18' })
+    app.innerHTML = state.name + '-' + state.age
   </script>
 </html>
