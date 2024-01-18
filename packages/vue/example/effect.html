@@ -14,18 +14,10 @@
   <script src="../../reactivity/dist/reactivity.global.js"></script>
   <script>
     const { reactive, effect } = VueReactivity
-    const obj ={ name: '张三', age: 20, sex: 0 }
+    const obj = { name: '张三', age: 20, sex: 0 }
     const state = reactive(obj)
-    const state2 = reactive(obj)
-    console.log("🚀 ~ state2:", state2)
-    // effect(() => {
-    //   app.innerHTML = state.name + '-'
-    //   effect(() => {
-    //     state.age
-    //   })
-    //   effect(() => {
-    //     state.age
-    //   })
-    // })
+    effect(() => {
+      app.innerHTML = state.name + '-' + state.age + '-' + state.sex
+    })
   </script>
 </html>

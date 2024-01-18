@@ -5,14 +5,12 @@ const reactiveMap = new WeakMap()
 const readonlyMap = new WeakMap()
 
 function createReactiveObj(target, isReadonly, baseHandlers) {
-  console.log("🚀 ~ createReactiveObj ~ target:", target)
   if (!isObject(target)) {
     return target
   }
 
   const proxyMap = isReadonly ? readonlyMap : reactiveMap
   const existingProxy = proxyMap.get(target)
-  console.log("🚀 ~ createReactiveObj ~ existingProxy:", existingProxy)
 
   if (existingProxy) {
     return existingProxy

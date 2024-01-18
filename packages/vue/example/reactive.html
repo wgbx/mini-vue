@@ -14,7 +14,7 @@
   <script src="../../reactivity/dist/reactivity.global.js"></script>
   <script>
     const { reactive, readonly, shallowReactive, shallowReadonly } = VueReactivity
-    const state = reactive({ name: '张三', age: '18' })
+    const state = readonly({ name: '张三', age: '18' })
     app.innerHTML = state.name + '-' + state.age
   </script>
 </html>
