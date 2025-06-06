@@ -14,7 +14,7 @@
  */
 
 import { isObject } from '@vue/shared'
-import { reactiveHandlers, shallowReadonlyHandlers, shallowReactiveHandlers, readonlyHandlers } from './baseHandlers'
+import { reactiveHandlers, shallowReadonlyHandlers, shallowReactiveHandlers, readonlyHandlers } from './baseHandlers.js'
 
 /**
  * 响应式对象的缓存
@@ -32,10 +32,10 @@ const readonlyMap = new WeakMap()
 /**
  * 创建响应式对象的通用函数
  *
- * @param target - 要代理的原始对象
- * @param isReadonly - 是否为只读代理
- * @param baseHandlers - Proxy 处理器对象，定义了 get/set 等拦截行为
- * @returns 代理对象或原始对象
+ * @param {Object} target - 要代理的原始对象
+ * @param {boolean} isReadonly - 是否为只读代理
+ * @param {Object} baseHandlers - Proxy 处理器对象，定义了 get/set 等拦截行为
+ * @returns {Object|*} 代理对象或原始对象
  */
 function createReactiveObj(target, isReadonly, baseHandlers) {
   // 1. 类型检查：只有对象才能被代理
@@ -64,8 +64,8 @@ function createReactiveObj(target, isReadonly, baseHandlers) {
 /**
  * 创建深度响应式对象
  *
- * @param target - 要转换为响应式的对象
- * @returns 响应式代理对象
+ * @param {Object} target - 要转换为响应式的对象
+ * @returns {Object} 响应式代理对象
  *
  * 特点：
  * - 对象的所有嵌套属性都会被递归转换为响应式
@@ -86,8 +86,8 @@ export function reactive(target) {
 /**
  * 创建浅层响应式对象
  *
- * @param target - 要转换为响应式的对象
- * @returns 浅层响应式代理对象
+ * @param {Object} target - 要转换为响应式的对象
+ * @returns {Object} 浅层响应式代理对象
  *
  * 特点：
  * - 只有对象的第一层属性是响应式的
@@ -109,8 +109,8 @@ export function shallowReactive(target) {
 /**
  * 创建深度只读对象
  *
- * @param target - 要转换为只读的对象
- * @returns 只读代理对象
+ * @param {Object} target - 要转换为只读的对象
+ * @returns {Object} 只读代理对象
  *
  * 特点：
  * - 对象的所有嵌套属性都是只读的
@@ -131,8 +131,8 @@ export function readonly(target) {
 /**
  * 创建浅层只读对象
  *
- * @param target - 要转换为只读的对象
- * @returns 浅层只读代理对象
+ * @param {Object} target - 要转换为只读的对象
+ * @returns {Object} 浅层只读代理对象
  *
  * 特点：
  * - 只有对象的第一层属性是只读的

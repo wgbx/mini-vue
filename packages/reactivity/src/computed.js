@@ -12,67 +12,28 @@
  * - 自身也是响应式的，可以被其他 computed 或 effect 依赖
  */
 
-import { effect, track, trigger } from './effect'
-import { TrackOpTypes, TriggerOpTypes } from './constants'
+import { effect, track, trigger } from './effect.js'
+import { TrackOpTypes, TriggerOpTypes } from './constants.js'
 import { isFunction } from '@vue/shared'
-import { ReactiveFlags } from './constants'
-
-/**
- * 只读计算属性接口
- */
-export interface ComputedRef<T = any> {
-  readonly value: T
-  readonly [ReactiveFlags.IS_READONLY]: true
-}
-
-/**
- * 可写计算属性接口
- */
-export interface WritableComputedRef<T> extends ComputedRef<T> {
-  value: T
-}
-
-/**
- * 计算属性的 getter 函数类型
- */
-export type ComputedGetter<T> = (...args: any[]) => T
-
-/**
- * 计算属性的 setter 函数类型
- */
-export type ComputedSetter<T> = (v: T) => void
-
-/**
- * 可写计算属性的配置选项
- */
-export interface WritableComputedOptions<T> {
-  get: ComputedGetter<T>
-  set: ComputedSetter<T>
-}
+import { ReactiveFlags } from './constants.js'
 
 /**
  * ComputedRefImpl 类 - 计算属性的具体实现
  */
-class ComputedRefImpl<T> {
-  public readonly effect // 内部 effect，用于收集依赖
-  public readonly __v_isRef = true // 标识为 ref 类型
-  public readonly [ReactiveFlags.IS_READONLY]: boolean // 是否只读
-
-  private _dirty = true // 脏标记：true 表示需要重新计算
-  private _value!: T // 缓存的计算结果
-
+class ComputedRefImpl {
   /**
    * 构造函数
-   * @param getter - 计算函数
-   * @param _setter - 设置函数（可选）
-   * @param isReadonly - 是否只读
+   * @param {Function} getter - 计算函数
+   * @param {Function} _setter - 设置函数（可选）
+   * @param {boolean} isReadonly - 是否只读
    */
-  constructor(
-    getter: ComputedGetter<T>,
-    private readonly _setter: ComputedSetter<T> | undefined,
-    isReadonly: boolean
-  ) {
-    this[ReactiveFlags.IS_READONLY] = isReadonly
+  constructor(getter, _setter, isReadonly) {
+    this.effect // 内部 effect，用于收集依赖
+    this.__v_isRef = true // 标识为 ref 类型
+    this[ReactiveFlags.IS_READONLY] = isReadonly // 是否只读
+    this._dirty = true // 脏标记：true 表示需要重新计算
+    this._value // 缓存的计算结果
+    this._setter = _setter // 设置函数
 
     // 创建内部 effect，用于依赖收集和响应更新
     this.effect = effect(getter, {
@@ -110,7 +71,7 @@ class ComputedRefImpl<T> {
    * value 的 setter
    * 只有可写计算属性才能设置值
    */
-  set value(newValue: T) {
+  set value(newValue) {
     if (this._setter) {
       // 如果有 setter 函数，调用它来处理新值
       this._setter(newValue)
@@ -122,28 +83,23 @@ class ComputedRefImpl<T> {
 }
 
 /**
- * 创建只读计算属性
+ * computed 函数的具体实现
+ * 支持两种调用方式：传入 getter 函数或配置对象
  *
- * @param getter - 计算函数
- * @returns 只读计算属性
+ * @param {Function|Object} getterOrOptions - getter 函数或包含 get/set 的配置对象
+ * @returns {ComputedRefImpl} 计算属性实例
  *
  * 使用示例：
+ *
+ * // 只读计算属性
  * const count = ref(0)
  * const double = computed(() => count.value * 2)
  *
  * console.log(double.value) // 0
  * count.value = 5
  * console.log(double.value) // 10
- */
-export function computed<T>(getter: ComputedGetter<T>): ComputedRef<T>
-
-/**
- * 创建可写计算属性
  *
- * @param options - 包含 get 和 set 函数的配置对象
- * @returns 可写计算属性
- *
- * 使用示例：
+ * // 可写计算属性
  * const firstName = ref('John')
  * const lastName = ref('Doe')
  *
@@ -161,25 +117,19 @@ export function computed<T>(getter: ComputedGetter<T>): ComputedRef<T>
  * console.log(firstName.value) // "Jane"
  * console.log(lastName.value)  // "Smith"
  */
-export function computed<T>(options: WritableComputedOptions<T>): WritableComputedRef<T>
-
-/**
- * computed 函数的具体实现
- * 支持两种调用方式：传入 getter 函数或配置对象
- */
-export function computed<T>(getterOrOptions: ComputedGetter<T> | WritableComputedOptions<T>) {
-  let getter: ComputedGetter<T>
-  let setter: ComputedSetter<T> | undefined
+export function computed(getterOrOptions) {
+  let getter
+  let setter
 
   // 判断参数类型，提取 getter 和 setter
   const onlyGetter = isFunction(getterOrOptions)
   if (onlyGetter) {
     // 只传入了 getter 函数，创建只读计算属性
-    getter = getterOrOptions as ComputedGetter<T>
+    getter = getterOrOptions
     setter = undefined
   } else {
     // 传入了配置对象，创建可写计算属性
-    const options = getterOrOptions as WritableComputedOptions<T>
+    const options = getterOrOptions
     getter = options.get
     setter = options.set
   }
@@ -191,5 +141,5 @@ export function computed<T>(getterOrOptions: ComputedGetter<T> | WritableCompute
     onlyGetter || !setter // 只有 getter 或没有 setter 时为只读
   )
 
-  return cRef as any
+  return cRef
 }

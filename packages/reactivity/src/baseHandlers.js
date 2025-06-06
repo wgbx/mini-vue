@@ -13,10 +13,10 @@
  */
 
 import { isObject } from '@vue/shared'
-import { reactive, readonly } from './reactive'
-import { warn } from './warning'
-import { TrackOpTypes, TriggerOpTypes } from './constants'
-import { track, trigger } from './effect'
+import { reactive, readonly } from './reactive.js'
+import { warn } from './warning.js'
+import { TrackOpTypes, TriggerOpTypes } from './constants.js'
+import { track, trigger } from './effect.js'
 
 // 预创建各种 getter 函数
 const get = createGetter() // 深度响应式 getter
@@ -31,9 +31,9 @@ const shallowSet = createSetter(true) // 浅层响应式 setter
 /**
  * 创建 getter 函数的工厂函数
  *
- * @param isReadonly - 是否为只读模式
- * @param shallow - 是否为浅层模式
- * @returns getter 函数
+ * @param {boolean} isReadonly - 是否为只读模式
+ * @param {boolean} shallow - 是否为浅层模式
+ * @returns {Function} getter 函数
  */
 function createGetter(isReadonly = false, shallow = false) {
   return function get(target, key, receiver) {
@@ -65,8 +65,8 @@ function createGetter(isReadonly = false, shallow = false) {
 /**
  * 创建 setter 函数的工厂函数
  *
- * @param _shallow - 是否为浅层模式
- * @returns setter 函数
+ * @param {boolean} _shallow - 是否为浅层模式
+ * @returns {Function} setter 函数
  */
 function createSetter(_shallow = false) {
   return function set(target, key, value, receiver) {
@@ -109,9 +109,9 @@ export const shallowReactiveHandlers = {
  */
 export const readonlyHandlers = {
   get: readonlyGet, // 深度只读 getter
-  set: (target, key) => {
+  set: (_target, key) => {
     // 只读对象的 setter：在开发环境下发出警告
-    warn(`Delete operation on key "${String(key)}" failed: target is readonly.`, target)
+    warn(`Delete operation on key "${String(key)}" failed: target is readonly.`)
   }
 }
 
@@ -121,8 +121,8 @@ export const readonlyHandlers = {
  */
 export const shallowReadonlyHandlers = {
   get: shallowReadonlyGet, // 浅层只读 getter
-  set: (target, key) => {
+  set: (_target, key) => {
     // 浅层只读对象的 setter：在开发环境下发出警告
-    warn(`Delete operation on key "${String(key)}" failed: target is readonly.`, target)
+    warn(`Delete operation on key "${String(key)}" failed: target is readonly.`)
   }
 }

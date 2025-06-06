@@ -12,13 +12,13 @@
  */
 
 // 导出响应式对象相关 API (reactive, readonly, shallowReactive 等)
-export * from './reactive'
+export * from './reactive.js'
 
 // 导出副作用系统 API (effect, track, trigger 等)
-export * from './effect'
+export * from './effect.js'
 
 // 导出 ref 系统 API (ref, isRef, unref, toRefs 等)
-export * from './ref'
+export * from './ref.js'
 
 // 导出计算属性 API (computed)
-export * from './computed'
+export * from './computed.js'

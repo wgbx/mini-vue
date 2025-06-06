@@ -25,32 +25,20 @@ let targetMap = new WeakMap()
 const effectStack = []
 
 /**
- * ReactiveEffect 接口定义
- * 描述一个响应式副作用函数的结构
- */
-interface ReactiveEffect {
-  (): any // effect 函数本身，可以被调用
-  id: number // 唯一标识符
-  _isEffect: boolean // 标识这是一个 effect 函数
-  raw: any // 原始函数
-  options: any // 配置选项
-}
-
-/**
  * 创建一个响应式副作用函数
  *
- * @param fn - 要执行的函数
- * @param options - 配置选项
- * @param options.lazy - 是否延迟执行（computed 会用到）
- * @param options.scheduler - 自定义调度器
- * @returns 返回 effect 函数，可以手动调用来重新执行
+ * @param {Function} fn - 要执行的函数
+ * @param {Object} options - 配置选项
+ * @param {boolean} options.lazy - 是否延迟执行（computed 会用到）
+ * @param {Function} options.scheduler - 自定义调度器
+ * @returns {Function} 返回 effect 函数，可以手动调用来重新执行
  *
  * 使用示例：
  * const stop = effect(() => {
  *   console.log(state.count) // 当 state.count 变化时，这个函数会重新执行
  * })
  */
-export function effect(fn, options: any = {}) {
+export function effect(fn, options = {}) {
   const effect = createReactiveEffect(fn, options)
 
   // 如果不是延迟执行，立即执行一次
@@ -64,11 +52,11 @@ export function effect(fn, options: any = {}) {
 /**
  * 创建响应式副作用函数的内部实现
  *
- * @param fn - 原始函数
- * @param options - 配置选项
- * @returns 包装后的 effect 函数
+ * @param {Function} fn - 原始函数
+ * @param {Object} options - 配置选项
+ * @returns {Function} 包装后的 effect 函数
  */
-function createReactiveEffect(fn, options): ReactiveEffect {
+function createReactiveEffect(fn, options) {
   const effect = function reactiveEffect() {
     // 避免重复执行：如果当前 effect 已经在执行栈中，就不再执行
     if (!effectStack.includes(effect)) {
@@ -89,7 +77,7 @@ function createReactiveEffect(fn, options): ReactiveEffect {
         activeEffect = effectStack[effectStack.length - 1]
       }
     }
-  } as ReactiveEffect
+  }
 
   // 设置 effect 的元数据
   effect.id = uid++ // 唯一 ID
@@ -104,9 +92,9 @@ function createReactiveEffect(fn, options): ReactiveEffect {
  * 依赖收集函数
  * 当响应式数据被访问时调用，建立数据与 effect 之间的依赖关系
  *
- * @param target - 目标对象（响应式对象）
- * @param _type - 操作类型（GET、HAS、ITERATE）
- * @param key - 被访问的属性名
+ * @param {Object} target - 目标对象（响应式对象）
+ * @param {string} _type - 操作类型（GET、HAS、ITERATE）
+ * @param {string|symbol} key - 被访问的属性名
  *
  * 数据结构：
  * targetMap (WeakMap):
@@ -146,13 +134,13 @@ export function track(target, _type, key) {
  * 依赖触发函数
  * 当响应式数据被修改时调用，执行所有相关的 effect 函数
  *
- * @param target - 目标对象
- * @param _type - 操作类型（SET、ADD、DELETE、CLEAR）
- * @param key - 被修改的属性名
- * @param _newValue - 新值（可选）
- * @param _oldValue - 旧值（可选）
+ * @param {Object} target - 目标对象
+ * @param {string} _type - 操作类型（SET、ADD、DELETE、CLEAR）
+ * @param {string|symbol} key - 被修改的属性名
+ * @param {*} _newValue - 新值（可选）
+ * @param {*} _oldValue - 旧值（可选）
  */
-export function trigger(target, _type, key, _newValue?, _oldValue?) {
+export function trigger(target, _type, key, _newValue, _oldValue) {
   // 1. 获取 target 对应的依赖映射表
   const depMap = targetMap.get(target)
   if (!depMap) {
@@ -161,13 +149,13 @@ export function trigger(target, _type, key, _newValue?, _oldValue?) {
   }
 
   // 2. 收集需要执行的 effects
-  const effects = new Set<ReactiveEffect>()
+  const effects = new Set()
 
   // 3. 根据 key 收集相关的 effects
   if (key !== void 0) {
     const dep = depMap.get(key)
     if (dep) {
-      dep.forEach((effect: ReactiveEffect) => {
+      dep.forEach(effect => {
         // 避免在 effect 执行过程中触发自己（防止无限循环）
         if (effect !== activeEffect) {
           effects.add(effect)
@@ -177,7 +165,7 @@ export function trigger(target, _type, key, _newValue?, _oldValue?) {
   }
 
   // 4. 执行所有收集到的 effects
-  effects.forEach((effect: ReactiveEffect) => {
+  effects.forEach(effect => {
     if (effect.options?.scheduler) {
       // 如果有自定义调度器，使用调度器执行
       effect.options.scheduler(effect)
