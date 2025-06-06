@@ -3,7 +3,6 @@
   "description": "@vue/vue",
   "main": "index.js",
   "module": "dist/vue.esm-bundler.js",
-  "types": "dist/vue.d.ts",
   "files": [
     "index.js",
     "dist"

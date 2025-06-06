@@ -1,6 +1,5 @@
 import NodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import typescript from '@rollup/plugin-typescript'
 import json from '@rollup/plugin-json'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -36,9 +35,9 @@ function createConfig(format, output) {
   output.sourcemap = true
 
   return {
-    input: resolve(`src/index.ts`),
+    input: resolve(`src/index.js`),
     output,
-    plugins: [json(), typescript(), NodeResolve(), commonjs()]
+    plugins: [json(), NodeResolve(), commonjs()]
   }
 }
 
