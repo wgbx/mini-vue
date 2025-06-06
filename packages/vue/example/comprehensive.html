@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprehensive Reactivity Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        margin: 5px;
+        padding: 8px 16px;
+        cursor: pointer;
+      }
+      .output {
+        background: #f5f5f5;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Vue 3 Reactivity System Test</h1>
+
+    <div class="section">
+      <h3>1. Reactive Object</h3>
+      <div id="reactive-output" class="output"></div>
+      <button id="update-reactive">更新响应式对象</button>
+    </div>
+
+    <div class="section">
+      <h3>2. Ref Values</h3>
+      <div id="ref-output" class="output"></div>
+      <button id="update-ref">更新 ref 值</button>
+      <button id="update-nested-ref">更新嵌套 ref</button>
+    </div>
+
+    <div class="section">
+      <h3>3. Computed Values</h3>
+      <div id="computed-output" class="output"></div>
+      <button id="update-computed-deps">更新计算属性依赖</button>
+    </div>
+
+    <div class="section">
+      <h3>4. Mixed Reactivity</h3>
+      <div id="mixed-output" class="output"></div>
+      <button id="update-mixed">综合更新</button>
+    </div>
+  </body>
+
+  <script src="../../reactivity/dist/reactivity.global.js"></script>
+  <script>
+    const { reactive, ref, computed, effect, isRef, unref, toRefs } = VueReactivity
+
+    // 1. 测试 reactive
+    const state = reactive({
+      name: '张三',
+      age: 25,
+      nested: {
+        city: '北京'
+      }
+    })
+
+    effect(() => {
+      document.getElementById('reactive-output').innerHTML = `姓名: ${state.name}, 年龄: ${state.age}, 城市: ${state.nested.city}`
+    })
+
+    // 2. 测试 ref
+    const count = ref(0)
+    const message = ref('Hello')
+    const nestedRef = ref({ value: 'nested' })
+
+    effect(() => {
+      document.getElementById('ref-output').innerHTML = `计数: ${count.value}, 消息: ${message.value}, 嵌套: ${nestedRef.value.value}`
+    })
+
+    // 3. 测试 computed
+    const double = computed(() => count.value * 2)
+    const fullInfo = computed(() => `${state.name} (${state.age}岁) - 计数的两倍: ${double.value}`)
+
+    effect(() => {
+      document.getElementById('computed-output').innerHTML = `计算属性: ${fullInfo.value}`
+    })
+
+    // 4. 混合测试
+    const { name, age } = toRefs(state)
+    const summary = computed(() => `${name.value} 今年 ${age.value} 岁，计数器: ${count.value}`)
+
+    effect(() => {
+      document.getElementById('mixed-output').innerHTML = `综合信息: ${summary.value} (是否为ref: ${isRef(name)})`
+    })
+
+    // 事件处理
+    document.getElementById('update-reactive').onclick = () => {
+      state.age++
+      state.nested.city = state.nested.city === '北京' ? '上海' : '北京'
+    }
+
+    document.getElementById('update-ref').onclick = () => {
+      count.value++
+      message.value = message.value === 'Hello' ? 'World' : 'Hello'
+    }
+
+    document.getElementById('update-nested-ref').onclick = () => {
+      nestedRef.value.value = 'updated-' + Date.now()
+    }
+
+    document.getElementById('update-computed-deps').onclick = () => {
+      count.value += 5
+      state.name = state.name === '张三' ? '李四' : '张三'
+    }
+
+    document.getElementById('update-mixed').onclick = () => {
+      count.value++
+      state.age++
+      state.name = '王五-' + count.value
+    }
+
+    console.log('Reactivity system loaded successfully!')
+    console.log('Available APIs:', Object.keys(VueReactivity))
+  </script>
+</html>

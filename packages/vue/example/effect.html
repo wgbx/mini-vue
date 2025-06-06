@@ -4,20 +4,37 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HTML</title>
+    <title>Effect Example</title>
   </head>
 
   <body>
     <div id="app"></div>
+    <button id="btn1">修改名字</button>
+    <button id="btn2">修改年龄</button>
+    <button id="btn3">添加新属性</button>
   </body>
-  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.3.4/vue.global.prod.js"></script>
   <script src="../../reactivity/dist/reactivity.global.js"></script>
   <script>
     const { reactive, effect } = VueReactivity
     const obj = { name: '张三', age: 20, sex: 0 }
     const state = reactive(obj)
+
+    // 设置响应式更新
     effect(() => {
-      app.innerHTML = state.name + '-' + state.age + '-' + state.sex
+      document.getElementById('app').innerHTML = `姓名: ${state.name} - 年龄: ${state.age} - 性别: ${state.sex === 0 ? '男' : '女'}`
     })
+
+    // 测试响应式更新
+    document.getElementById('btn1').onclick = () => {
+      state.name = state.name === '张三' ? '李四' : '张三'
+    }
+
+    document.getElementById('btn2').onclick = () => {
+      state.age++
+    }
+
+    document.getElementById('btn3').onclick = () => {
+      state.sex = state.sex === 0 ? 1 : 0
+    }
   </script>
 </html>
